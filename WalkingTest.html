@@ -12,7 +12,7 @@
 		<canvas id='canvas' width='800' height='600'></canvas>
 		<script type='text/javascript'>
 			var ctx;
-			var crewMem = {x: 150, y: 150, w: 12, h: 9, d: "down"};
+			var crewMem = {x: 150, y: 150, w: 12, h: 6, d: "down", verCheck: 0, horCheck: 1};
 			var direction = ["right","left", "up", "down"];
 			
 			main();
@@ -25,8 +25,17 @@
 			function update()
 			{
 				
-				if (Math.floor(Math.random()*30) == 1)
+				if (Math.floor(Math.random()*30) == 1){
 					crewMem.d = direction[Math.floor(Math.random()*4)];
+					if(crewMem.d=="up" || crewMem.d=="down"){
+						crewMem.verCheck = 0;
+						crewMem.horCheck = 1;
+					}
+					else{
+						crewMem.verCheck = 1;
+						crewMem.horCheck = 0;
+					}
+				}	
 				
 				if(crewMem.d=="up")
 					crewMem.y --;
@@ -37,29 +46,29 @@
 				if(crewMem.d=="right")
 					crewMem.x ++;
 					
-				if (hitWall()){
-					if(crewMem.d=="up")
-						crewMem.d = "down";
-					if(crewMem.d=="down")
-						crewMem.d = "up";
-					if(crewMem.d=="left")
-						crewMem.d = "right";
-					if(crewMem.d=="right")
-						crewMem.d = "left";
-				}
 			}
 			
 			function draw()
 			{
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-				
-				ctx.fillStyle = ("black");
-				ctx.fillRect(10, 10, 200, 200);
-				ctx.fillStyle = ("white");
-				ctx.fillRect(11, 11, 198, 198);
-				
 				// tan: EFE4B0, light blue: 99D9B6, hair brown: B97A57
-				if(crewMem.d =="up"||crewMem.d =="down"){
+				
+				
+				//New code. Draws the guy using mathmatical calculations
+				ctx.fillStyle = "#99D9B6";
+				ctx.fillRect(crewMem.x, crewMem.y, (crewMem.verCheck*crewMem.h) + (crewMem.horCheck*crewMem.w), (crewMem.verCheck*crewMem.w) + (crewMem.horCheck*crewMem.h));
+				ctx.fillStyle = "#B97A57";
+				if(crewMem.d=="up"||crewMem.d=="left")
+					ctx.fillStyle = "#EFE4B0";
+				ctx.fillRect(crewMem.x + (crewMem.horCheck*3), crewMem.y + (crewMem.verCheck*3), 6, 6);
+				ctx.fillStyle = "#B97A57";
+				if(crewMem.d=="down"||crewMem.d=="right")
+					ctx.fillStyle = "#EFE4B0";
+				ctx.fillRect(crewMem.x+3, crewMem.y+3, (crewMem.verCheck*3) + (crewMem.horCheck*6), (crewMem.verCheck*6) + (crewMem.horCheck*3));
+				
+				
+				//Old code. Might be more efficient, but it's longer and messier
+				/*if(crewMem.d =="up"||crewMem.d =="down"){
 					crewMem.h = 3;
 					crewMem.w = 9;
 					ctx.fillStyle = "#99D9B6";
@@ -96,13 +105,10 @@
 						ctx.fillStyle = "#EFE4B0";
 						ctx.fillRect(crewMem.x+3, crewMem.y+3, 3, 6);
 					}
-				}
+				}*/
+				
 			}
 			
-			function hitWall()
-			{
-				//hello world!
-			}
 			
 		</script>
 </body>
